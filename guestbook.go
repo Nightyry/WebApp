@@ -67,9 +67,18 @@ func viewHandler(writer http.ResponseWriter, request *http.Request) {
 
 }
 func main() {
+
 	http.HandleFunc("/guestbook", viewHandler)
 	http.HandleFunc("/guestbook/new", newHandler)
 	http.HandleFunc("/guestbook/create", createHandler)
-	err := http.ListenAndServe("localhost:8080", nil)
-	log.Fatal(err)
+
+	port := os.Getenv("PORT")
+	if port == "" {
+		log.Fatal("PORT environment variable is not set")
+	}
+
+	err := http.ListenAndServe(":"+port, nil)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
