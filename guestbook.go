@@ -14,6 +14,10 @@ type Guestbook struct {
 	Signatures     []string
 }
 
+func rootHandler(writer http.ResponseWriter, request *http.Request) {
+	http.Redirect(writer, request, "/guestbook", http.StatusFound)
+}
+
 func createHandler(writer http.ResponseWriter, request *http.Request) {
 	signature := request.FormValue("signature")
 	options := os.O_WRONLY | os.O_APPEND | os.O_CREATE
@@ -67,7 +71,7 @@ func viewHandler(writer http.ResponseWriter, request *http.Request) {
 
 }
 func main() {
-
+	http.HandleFunc("/", rootHandler)
 	http.HandleFunc("/guestbook", viewHandler)
 	http.HandleFunc("/guestbook/new", newHandler)
 	http.HandleFunc("/guestbook/create", createHandler)
@@ -81,4 +85,5 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
 }
